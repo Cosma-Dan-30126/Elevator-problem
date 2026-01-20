@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>LIFT JS</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+<div class="corpul_cladirii">
+ <div class="container_etaje" id="container_etaje">
+ </div>   
+
+ <div class="put-lifturi">
+    <div class="put">
+        <div class="lift" id="lift-A" style="bottom: 0%;">
+            <div class="usa stanga"></div>
+            <div class="usa dreapta"></div>
+            <div class="afisaj-etaj">0</div>
+            <span class="label">A</span>
+        </div>
+    </div>
+
+     <div class="put">
+        <div class="lift" id="lift-B" style="bottom: 85.68%;">
+            <div class="usa stanga"></div>
+            <div class="usa dreapta"></div>
+            <div class="afisaj-etaj">0</div>
+            <span class="label">B</span>
+        </div>
+    </div>
+ </div>
+</div>
+
+<div class="panouri-interioare-control">
+    <div class="panou" id="panou-A">
+        <h3>Panou Lift 1</h3>
+        <div class="afisaj-panou" id="afisaj-panou-A">--</div>
+        <div class="grid-butoane" id="intern-btns-A">
+        </div>
+        <div class="stare" id="stare-A">IDLE</div>
+    </div>
+
+    <div class="panou" id="panou-B">
+        <h3>Panou Lift 2</h3>
+        <div class="afisaj-panou" id="afisaj-panou-B">--</div>
+        <div class="grid-butoane" id="intern-btns-B">
+        </div>
+        <div class="stare" id="stare-B">IDLE</div>
+    </div>
+</div>
+
+<script src="scripts.js"></script>
+</body>
+</html>
