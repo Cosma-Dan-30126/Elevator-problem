@@ -1,55 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ro">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>LIFT JS</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-<body>
-<div class="corpul_cladirii">
- <div class="container_etaje" id="container_etaje">
- </div>   
+  <body>
+    <div class="building_body">
+      <div class="container_floors" id="container_floors"></div>
 
- <div class="put-lifturi">
-    <div class="put">
-        <div class="lift" id="lift-A" style="bottom: 0%;">
-            <div class="usa stanga"></div>
-            <div class="usa dreapta"></div>
-            <div class="afisaj-etaj">0</div>
+      <div class="shaft-lifts">
+        <div class="shaft">
+          <div class="lift" id="lift-A" style="bottom: 0%">
+            <div class="left_door"></div>
+            <div class="right_door"></div>
+            <div class="floor_view">0</div>
             <span class="label">A</span>
+          </div>
         </div>
-    </div>
 
-     <div class="put">
-        <div class="lift" id="lift-B" style="bottom: 85.68%;">
-            <div class="usa stanga"></div>
-            <div class="usa dreapta"></div>
-            <div class="afisaj-etaj">0</div>
+        <div class="shaft">
+          <div class="lift" id="lift-B" style="bottom: 85.68%">
+            <div class="left_door"></div>
+            <div class="right_door"></div>
+            <div class="floor_view">0</div>
             <span class="label">B</span>
+          </div>
         </div>
-    </div>
- </div>
-</div>
-
-<div class="panouri-interioare-control">
-    <div class="panou" id="panou-A">
-        <h3>Panou Lift 1</h3>
-        <div class="afisaj-panou" id="afisaj-panou-A">--</div>
-        <div class="grid-butoane" id="intern-btns-A">
-        </div>
-        <div class="stare" id="stare-A">IDLE</div>
+      </div>
     </div>
 
-    <div class="panou" id="panou-B">
-        <h3>Panou Lift 2</h3>
-        <div class="afisaj-panou" id="afisaj-panou-B">--</div>
-        <div class="grid-butoane" id="intern-btns-B">
-        </div>
-        <div class="stare" id="stare-B">IDLE</div>
-    </div>
-</div>
+    <div class="interior_floor_pannels">
+      <div class="pannel" id="pannel-A">
+        <h3>Pannel Lift 1</h3>
+        <div class="view_pannel" id="view_pannel_A">--</div>
+        <div class="grid_buttons" id="intern-btns-A"></div>
+        <div class="state" id="state-A">IDLE</div>
+      </div>
 
-<script src="scripts.js"></script>
-</body>
+      <div class="pannel" id="pannel-B">
+        <h3>Pannel Lift 2</h3>
+        <div class="view_pannel" id="view_pannel_B">--</div>
+        <div class="grid_buttons" id="intern-btns-B"></div>
+        <div class="state" id="state-B">IDLE</div>
+      </div>
+    </div>
+
+    <script src="scripts.js"></script>
+  </body>
 </html>

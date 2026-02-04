@@ -1,4 +1,4 @@
-body{
+body {
     background-image: url('./resurse/blocuri.png');
     background-position: center;
     background-repeat: no-repeat;
@@ -13,7 +13,7 @@ body{
 
 
 /*Nivel continere corp cladire*/
-.corpul_cladirii {
+.building_body {
     display: flex;
     background: rgb(99, 74, 4);
     padding: 20px;
@@ -21,10 +21,11 @@ body{
     height: 500px;
     width: 600px;
     justify-content: space-between;
-    border-radius: 10px; /* rotunjim colturile pentru un design mai bun */
+    border-radius: 10px;
+    /* rotunjim colturile pentru un design mai bun */
 }
 
-.container_etaje{
+.container_floors {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -32,8 +33,9 @@ body{
     height: 100%;
 }
 
-.rand_etaj{
-    height: 14.28%; /* 7 etaje adica 100% inmap 7 = 14.28% */
+.row_floor {
+    height: 14.28%;
+    /* 7 etaje adica 100% inmap 7 = 14.28% */
     border-bottom: 1px dashed #ffffff;
     display: flex;
     align-items: center;
@@ -41,18 +43,18 @@ body{
     padding-right: 10px;
 }
 
-.eticheta_etaj{
+.tag_floor {
     font-weight: bold;
     font-size: 1.2rem;
     margin-right: 10px;
 }
 
-.butoane-navigatie{
+.butoane-navigatie {
     display: flex;
-    gap: 5px;   
+    gap: 5px;
 }
 
-.btn-nav{
+.btn-nav {
     width: 30px;
     height: 30px;
     border: 1px solid #999;
@@ -62,28 +64,39 @@ body{
     font-weight: bold;
 }
 
-.btn-nav:hover { background: #ddd; }
-.btn-nav.active { background: #ffcc00; border-color: #eea200; }
+.btn-nav:hover {
+    background: #ddd;
+}
 
-.etaj-arrows{
+.btn-nav.active {
+    background: #ffcc00;
+    border-color: #eea200;
+}
+
+.floor_arrows {
     display: flex;
     flex-direction: column;
     font-size: 12px;
     color: #ddd;
 }
 
-.arrow-up.on { color: #2ecc71; }
-.arrow-down.on { color: #e74c3c; }
+.arrow-up.on {
+    color: #2ecc71;
+}
 
-.put-lifturi{
-    display:flex;
+.arrow-down.on {
+    color: #e74c3c;
+}
+
+.shaft-lifts {
+    display: flex;
     width: 50%;
     justify-content: space-around;
     background: #ddd;
     border-left: 2px solid black
 }
 
-.put{
+.shaft {
     width: 80px;
     height: 100%;
     background: #ccc;
@@ -91,7 +104,7 @@ body{
     border-right: 1px solid #999;
 }
 
-.lift{
+.lift {
     width: 100%;
     height: 14.28%;
     background: #34495e;
@@ -106,7 +119,7 @@ body{
     z-index: 2;
 }
 
-.afisaj-etaj{
+.floor_view {
     font-family: 'Times New Roman', monospace;
     color: crimson;
     background: black;
@@ -116,13 +129,13 @@ body{
 }
 
 /* Panoul interior al liftului */
-.panouri-interioare-control{
-    display:flex;
+.interior_floor_pannels {
+    display: flex;
     gap: 30px;
     margin-top: 20px;
 }
 
-.panou{
+.pannel {
     background: #8B4513;
     color: white;
     padding: 15px;
@@ -131,14 +144,14 @@ body{
     text-align: center;
 }
 
-.grid-butoane{
+.grid_buttons {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 5px;
     margin-top: 10px;
 }
 
-.btn-intern{
+.btn-intern {
     padding: 10px;
     background: #444;
     color: white;
@@ -147,11 +160,21 @@ body{
     cursor: pointer;
 }
 
-.btn-intern:hover { background: #666; }
-.btn-intern:disabled { opacity: 0.3; cursor: not-allowed; }
-.btn-intern.selected { background: #e74c3c; color: white; }
+.btn-intern:hover {
+    background: #666;
+}
 
-.stare{
+.btn-intern:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.btn-intern.selected {
+    background: #e74c3c;
+    color: white;
+}
+
+.state {
     margin-top: 10px;
     font-size: 13px;
     font-weight: bold;
