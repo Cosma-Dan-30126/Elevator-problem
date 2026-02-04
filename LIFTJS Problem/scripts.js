@@ -1,5 +1,6 @@
 // Configurare si Selectia etajelor
 const NUM_FLOORS = 7;
+
 const container_floors = document.getElementById("container_floors");
 
 //Configuroare butoane si sageti etaje
@@ -9,11 +10,11 @@ for (let i = 0; i < NUM_FLOORS; i++) {
 
   const upBtn =
     i < 6
-      ? `<button class="btn-nav" onclick="controller.callLift(${i}, 'GOING UP')">▲</button>`
+      ? `<button id="btn-up-${i}" class="btn-nav" onclick="controller.callLift(${i}, 'GOING UP')">▲</button>`
       : "";
   const downBtn =
     i > 0
-      ? `<button class="btn-nav" onclick="controller.callLift(${i}, 'GOING DOWN')">▼</button>`
+      ? `<button id="btn-down-${i}" class="btn-nav" onclick="controller.callLift(${i}, 'GOING DOWN')">▼</button>`
       : "";
 
   rand.innerHTML = `
@@ -35,6 +36,7 @@ for (let i = 0; i < NUM_FLOORS; i++) {
   const grid = document.getElementById(`intern-btns-${id}`);
   for (let i = 0; i < NUM_FLOORS; i++) {
     const btn = document.createElement("button");
+    btn.id = `btn-intern-${id}-${i}`;
     btn.className = "btn-intern";
     btn.innerText = i;
     btn.onclick = () => controller.selectDestination(id, i);
@@ -59,6 +61,7 @@ class Lift {
 
   moveTo(floor) {
     if (this.state !== "IDLE" && this.state !== "DOORS_OPEN") return;
+    this.element.classList.remove("open");
     this.destination = floor;
     this.state = "MOVING";
     this.direction = this.destination > this.currentFloor ? "UP" : "DOWN";
@@ -81,17 +84,27 @@ class Lift {
   arriveAtEtaj(floor) {
     this.currentFloor = floor;
     this.state = "DOORS_OPEN";
+    this.element.classList.add("open");
     this.direction = "IDLE";
     this.display.innerText = floor;
     this.panelDisplay.innerText = floor;
     this.updatePanelStatus();
 
+    //Adaug o logica de stingere a butoanelor dupa ce liftul a ajuns la destinatie
+    const upBtn= document.getElementById(`btn-up-${floor}`);
+    const downBtn= document.getElementById(`btn-down-${floor}`);
+    if (upBtn) upBtn.classList.remove("active");
+    if (downBtn) downBtn.classList.remove("active");
+    
+    const internBtn= document.getElementById(`btn-intern-${this.id}-${floor}`);
+    if (internBtn) internBtn.classList.remove("active");
     resetFloorArrows(floor);
 
     console.log(`Lift ${this.id} a ajuns la etajul ${floor}.`);
 
     // După 3 secunde, intră în IDLE și închide ușile, gata de o nouă comandă
     setTimeout(() => {
+      this.element.classList.remove("open");  
       this.state = "IDLE";
       this.updatePanelStatus();
     }, 3000);
@@ -113,6 +126,11 @@ class Controller {
 
   callLift(floor, direction) {
     console.log(`>> Buton ${direction} apăsat la etajul ${floor}`);
+
+    // Marcam butonul ca activ
+    const suffix = direction === "GOING UP" ? "up" : "down";
+    const btnId=`btn-${suffix}-${floor}`;
+    document.getElementById(btnId).classList.add("active");
     // Alegem cel mai apropiat lift disponibil
     const bestLift = this.findBestLift(floor);
 
@@ -160,7 +178,13 @@ class Controller {
       return;
     }
 
-    console.log("[interior Lift ${liftId}] Etaj ales: ${targetFloor}");
+    const btnId= `btn-intern-${liftId}-${targetFloor}`;
+    const btn = document.getElementById(btnId);
+    if (btn) {
+        btn.classList.add('active'); // Folosim clasa .selected din CSS-ul tău
+    }
+
+    console.log(`[interior Lift ${liftId}] Etaj ales: ${targetFloor}`);
     lift.moveTo(targetFloor);
   }
 }

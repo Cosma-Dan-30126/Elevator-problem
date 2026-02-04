@@ -70,6 +70,7 @@ body {
 
 .btn-nav.active {
     background: #ffcc00;
+    box-shadow: 0 0 10px #ffcc00;
     border-color: #eea200;
 }
 
@@ -104,6 +105,7 @@ body {
     border-right: 1px solid #999;
 }
 
+
 .lift {
     width: 100%;
     height: 14.28%;
@@ -117,7 +119,32 @@ body {
     color: white;
     border: 3px solid black;
     z-index: 2;
+    overflow: hidden;  /* Asigurăm că, conținutul liftului nu depășește limitele sale */
 }
+
+.left_door, .right_door{
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background: #7f8c8d;
+    border: 1px solid #34495e;
+    transition: transform 0.7s ease-in-out;
+    z-index: 3;
+
+}
+
+.left_door { left: 0; }
+.right_door { right: 0; }
+
+/* Clasele care vor fi activate din JavaScript */
+.lift.open .left_door {
+    transform: translateX(-100%);
+}
+
+.lift.open .right_door {
+    transform: translateX(100%);
+}
+
 
 .floor_view {
     font-family: 'Times New Roman', monospace;
@@ -172,6 +199,12 @@ body {
 .btn-intern.selected {
     background: #e74c3c;
     color: white;
+}
+
+.btn-intern.active{
+    background-color: #ee250e; 
+    box-shadow: 0 0 10px #e74c3c;
+    transform: scale(0.95)
 }
 
 .state {
