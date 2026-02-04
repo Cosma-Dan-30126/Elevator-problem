@@ -51,6 +51,8 @@ class Lift {
     this.destination = null;
     this.state = "IDLE"; // IDLE, MOVING, DOORS_OPEN
     this.direction = "IDLE"; // UP, DOWN, IDLE
+    this.queue = []; //coada de comenzi pentru lift, daca e ocupat sau in miscare, comenzile se adauga aici si se proceseaza dupa ce liftul devine IDLE
+    this.movementArrowsInterval = null; // simulam trecerea liftului prin etaje
 
     // Elemente DOM
     this.element = document.getElementById(`lift-${id}`);
@@ -59,13 +61,40 @@ class Lift {
     this.panelStatus = document.getElementById(`state-${id}`);
   }
 
+  addToQueue(floor) {
+    if (!this.queue.includes(floor)) {
+      this.queue.push(floor);
+      console.log(
+        `Comanda pentru etajul ${floor} adaugata in coada liftului ${this.id}. Coada curenta: [${this.queue.join(", ")}]`,
+      );
+    }
+
+    if (this.state === "IDLE") {
+      this.processNextDestination();
+    }
+  }
+
+  processNextDestination() {
+    if (this.queue.length === 0) {
+      this.state = "IDLE";
+      this.updatePanelStatus();
+      return;
+    }
+
+    const nextFloor = this.queue.shift();
+    console.log(
+      `Lift ${this.id} proceseaza urmatoarea comanda din coada: etajul ${nextFloor}. Coada ramasa: [${this.queue.join(", ")}]`,
+    );
+    this.moveTo(nextFloor);
+  }
+
   moveTo(floor) {
-    if (this.state !== "IDLE" && this.state !== "DOORS_OPEN") return;
     this.element.classList.remove("open");
     this.destination = floor;
     this.state = "MOVING";
     this.direction = this.destination > this.currentFloor ? "UP" : "DOWN";
     this.updatePanelStatus();
+    this.simFloorPassing();
 
     //in aceasta instructiune trb sa calclez distanta si timpul necesar liftului sa circule intre etaje
     const dist = Math.abs(floor - this.currentFloor);
@@ -80,8 +109,31 @@ class Lift {
       this.arriveAtEtaj(floor);
     }, time);
   }
+  simFloorPassing() {
+    // Simulăm trecerea prin etaje aprinzând săgețile corespunzătoare
+    const step = this.direction === "UP" ? 1 : -1;
+    let simulatedFloor = this.currentFloor;
+
+    //Oprim simulari anterioare daca exista
+    if (this.movementArrowsInterval) {
+      clearInterval(this.movementArrowsInterval);
+    }
+
+    this.movementArrowsInterval = setInterval(() => {
+      simulatedFloor += step;
+      //Aprindem sageata pe floorul curent
+      updateFloorArrows(simulatedFloor, this.direction === "UP");
+      //Daca suntem la etajul unde a fost chemat liftul o sa opresc simularea
+      if (simulatedFloor === this.destination) {
+        clearInterval(this.movementArrowsInterval);
+        this.movementArrowsInterval = null;
+      }
+    }, 1000); //o secunda pe etaj
+  }
 
   arriveAtEtaj(floor) {
+    resetAllFloorArrows(); // Resetăm săgețile de pe toate etajele când liftul ajunge la destinație
+
     this.currentFloor = floor;
     this.state = "DOORS_OPEN";
     this.element.classList.add("open");
@@ -91,31 +143,29 @@ class Lift {
     this.updatePanelStatus();
 
     //Adaug o logica de stingere a butoanelor dupa ce liftul a ajuns la destinatie
-    const upBtn= document.getElementById(`btn-up-${floor}`);
-    const downBtn= document.getElementById(`btn-down-${floor}`);
+    const upBtn = document.getElementById(`btn-up-${floor}`);
+    const downBtn = document.getElementById(`btn-down-${floor}`);
     if (upBtn) upBtn.classList.remove("active");
     if (downBtn) downBtn.classList.remove("active");
-    
-    const internBtn= document.getElementById(`btn-intern-${this.id}-${floor}`);
+
+    const internBtn = document.getElementById(`btn-intern-${this.id}-${floor}`);
     if (internBtn) internBtn.classList.remove("active");
-    resetFloorArrows(floor);
+    
 
     console.log(`Lift ${this.id} a ajuns la etajul ${floor}.`);
 
     // După 3 secunde, intră în IDLE și închide ușile, gata de o nouă comandă
     setTimeout(() => {
-      this.element.classList.remove("open");  
+      this.element.classList.remove("open");
       this.state = "IDLE";
       this.updatePanelStatus();
+      this.processNextDestination(); // Verificăm dacă există comenzi în coadă după ce liftul devine IDLE
     }, 3000);
   }
   updatePanelStatus() {
     this.panelStatus.innerText = `State: ${this.state} (Floor: ${this.currentFloor})`;
     // Actualizam sagețile de pe etajul curent in timp ce trece
-    // aprindem săgețile doar când e MOVING
-    if (this.state === "MOVING") {
-      updateFloorArrows(this.currentFloor, this.direction === "UP");
-    }
+    
   }
 }
 
@@ -129,7 +179,7 @@ class Controller {
 
     // Marcam butonul ca activ
     const suffix = direction === "GOING UP" ? "up" : "down";
-    const btnId=`btn-${suffix}-${floor}`;
+    const btnId = `btn-${suffix}-${floor}`;
     document.getElementById(btnId).classList.add("active");
     // Alegem cel mai apropiat lift disponibil
     const bestLift = this.findBestLift(floor);
@@ -138,7 +188,7 @@ class Controller {
       alert("Lifturile sunt ocupate in acest moment. Asteptati va rog!");
       return;
     }
-    bestLift.moveTo(floor);
+    bestLift.addToQueue(floor);
   }
 
   findBestLift(targetFloor) {
@@ -178,24 +228,38 @@ class Controller {
       return;
     }
 
-    const btnId= `btn-intern-${liftId}-${targetFloor}`;
+    const btnId = `btn-intern-${liftId}-${targetFloor}`;
     const btn = document.getElementById(btnId);
     if (btn) {
-        btn.classList.add('active'); // Folosim clasa .selected din CSS-ul tău
+      btn.classList.add("active"); // Folosim clasa .selected din CSS-ul tău
     }
 
     console.log(`[interior Lift ${liftId}] Etaj ales: ${targetFloor}`);
-    lift.moveTo(targetFloor);
+    lift.addToQueue(targetFloor);
   }
 }
 
 function updateFloorArrows(floorIndex, isUp) {
   // Aprindem săgeata corespunzătoare pe etajul curent (simulare trecere)
   // Nota: Într-o aplicație reală, asta s-ar actualiza la fiecare floor traversat.
+  resetAllFloorArrows(); // Resetăm săgețile de pe toate etajele înainte de a aprinde cea curentă
+  const arrows = document.getElementById(`arrows-${floorIndex}`);
+  if (!arrows) return;
+  if (isUp) {
+    arrows.querySelector(".arrow-up").classList.add("on");
+  } else {
+    arrows.querySelector(".arrow-down").classList.add("on");
+  }
 }
 
-function resetFloorArrows(floor) {
+function resetAllFloorArrows(floor) {
   // Reset arrows color
+  for (let i = 0; i < NUM_FLOORS; i++) {
+    const arrows = document.getElementById(`arrows-${i}`);
+    if (!arrows) continue;
+    arrows.querySelector(".arrow-up").classList.remove("on");
+    arrows.querySelector(".arrow-down").classList.remove("on");
+  }
 }
 
 // Initializare
