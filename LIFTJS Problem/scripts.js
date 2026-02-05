@@ -150,7 +150,6 @@ class Lift {
 
     const internBtn = document.getElementById(`btn-intern-${this.id}-${floor}`);
     if (internBtn) internBtn.classList.remove("active");
-    
 
     console.log(`Lift ${this.id} a ajuns la etajul ${floor}.`);
 
@@ -165,7 +164,6 @@ class Lift {
   updatePanelStatus() {
     this.panelStatus.innerText = `State: ${this.state} (Floor: ${this.currentFloor})`;
     // Actualizam sagețile de pe etajul curent in timp ce trece
-    
   }
 }
 

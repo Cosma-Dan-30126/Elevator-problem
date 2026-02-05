@@ -119,10 +119,12 @@ body {
     color: white;
     border: 3px solid black;
     z-index: 2;
-    overflow: hidden;  /* Asigurăm că, conținutul liftului nu depășește limitele sale */
+    overflow: hidden;
+    /* Asigurăm că, conținutul liftului nu depășește limitele sale */
 }
 
-.left_door, .right_door{
+.left_door,
+.right_door {
     position: absolute;
     width: 50%;
     height: 100%;
@@ -133,8 +135,13 @@ body {
 
 }
 
-.left_door { left: 0; }
-.right_door { right: 0; }
+.left_door {
+    left: 0;
+}
+
+.right_door {
+    right: 0;
+}
 
 /* Clasele care vor fi activate din JavaScript */
 .lift.open .left_door {
@@ -173,7 +180,7 @@ body {
 
 .grid_buttons {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 5px;
     margin-top: 10px;
 }
@@ -201,8 +208,8 @@ body {
     color: white;
 }
 
-.btn-intern.active{
-    background-color: #ee250e; 
+.btn-intern.active {
+    background-color: #ee250e;
     box-shadow: 0 0 10px #e74c3c;
     transform: scale(0.95)
 }
